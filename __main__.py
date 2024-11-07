@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import argparse
 from collections import Counter
 from pathlib import Path
@@ -17,7 +19,7 @@ def parse_arguments():
 if __name__ == "__main__":
     args = parse_arguments()
     chat_path = MAIN_FOLDER / args.filename
-    
+
     if chat_path.suffix == '.gz':
         df = pd.read_csv(chat_path, compression='gzip', keep_default_na=False)
     elif chat_path.suffix == '.csv':
