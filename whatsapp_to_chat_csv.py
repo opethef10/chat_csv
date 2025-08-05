@@ -12,6 +12,7 @@ MESSAGE_PATTERN = r'.*?'
 DATETIME_PATTERNS = (
     r'\d{4}-\d{2}-\d{2}' + " " + TIME_PATTERN,
     r'\d{2}/\d{2}/\d{4}' + ", " + TIME_PATTERN,
+    r'\d{1,2}/\d{1,2}/\d{2}' + ", " + TIME_PATTERN,
 )
 MESSENGER_DATETIME_PATTERN = r'\d{4}-\d{2}-\d{2} \d{2}:\d{2} [AP]M'
 # ^(\d{4}-\d{2}-\d{2} \d{2}:\d{2} [AP]M)\n(?:(\S[^:]*?)\n)?(.*?)(?=\n\d{4}-\d{2}-\d{2} \d{2}:\d{2} [AP]M|\Z)
@@ -34,6 +35,7 @@ REGEX_PATTERNS.append(
 ACCEPTED_DATETIME_FORMATS = (
     '%Y-%m-%d %H:%M:%S',
     '%d/%m/%Y, %H:%M',
+    '%m/%d/%y, %H:%M',
     "%Y-%m-%d %I:%M %p"
 )
 
@@ -66,7 +68,7 @@ if __name__ == "__main__":
     chat_path = MAIN_DIR / args.filename
     output_path = chat_path.with_suffix(OUTPUT_FILE_EXTENSION)
     text = chat_path.read_text().rstrip()
-    
+
     for date_format, pattern in zip(ACCEPTED_DATETIME_FORMATS, REGEX_PATTERNS):
         all_matches = pattern.findall(text)
         if all_matches:
@@ -78,10 +80,10 @@ if __name__ == "__main__":
             break
     else:
         raise SystemExit(ERROR_MSG)
-        
+
     with output_path.open("w") as csvfile:
         csvwriter = csv.writer(csvfile, lineterminator='\n')
 
         csvwriter.writerow(CSV_HEADER_COLUMNS)
         csvwriter.writerows(all_matches)
-        
+
