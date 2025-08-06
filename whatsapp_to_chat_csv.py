@@ -13,6 +13,7 @@ DATETIME_PATTERNS = (
     r'\d{4}-\d{2}-\d{2}' + " " + TIME_PATTERN,
     r'\d{2}/\d{2}/\d{4}' + ", " + TIME_PATTERN,
     r'\d{1,2}/\d{1,2}/\d{2}' + ", " + TIME_PATTERN,
+    r'\d{1,2}/\d{1,2}/\d{2}, ' + TIME_PATTERN + r'(?: [AP]M)?',
 )
 MESSENGER_DATETIME_PATTERN = r'\d{4}-\d{2}-\d{2} \d{2}:\d{2} [AP]M'
 # ^(\d{4}-\d{2}-\d{2} \d{2}:\d{2} [AP]M)\n(?:(\S[^:]*?)\n)?(.*?)(?=\n\d{4}-\d{2}-\d{2} \d{2}:\d{2} [AP]M|\Z)
@@ -36,7 +37,8 @@ ACCEPTED_DATETIME_FORMATS = (
     '%Y-%m-%d %H:%M:%S',
     '%d/%m/%Y, %H:%M',
     '%m/%d/%y, %H:%M',
-    "%Y-%m-%d %I:%M %p"
+    '%m/%d/%y, %I:%M %p',
+    "%Y-%m-%d %I:%M %p",
 )
 
 TIMESTAMP_TO = '%Y-%m-%d %H:%M:%S'
@@ -67,7 +69,7 @@ if __name__ == "__main__":
     args = parse_arguments()
     chat_path = MAIN_DIR / args.filename
     output_path = chat_path.with_suffix(OUTPUT_FILE_EXTENSION)
-    text = chat_path.read_text().rstrip()
+    text = chat_path.read_text().rstrip().replace('\u202f', ' ').replace('\u00a0', ' ')
 
     for date_format, pattern in zip(ACCEPTED_DATETIME_FORMATS, REGEX_PATTERNS):
         all_matches = pattern.findall(text)
